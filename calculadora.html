@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+            opacity: 0.7;
+        }
+
+        .back-btn:active {
+            opacity: 1;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .toggle-section {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #444;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        .disc-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+
+        .disc-weight {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .disc-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .disc-count {
+            font-size: 18px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .control-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .total-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .total-final {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Elemento vazio para balancear o grid */
+        .header-spacer {
+            width: 24px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="back-btn">←</a>
+        <h1>Calculadora</h1>
+        <div class="header-spacer"></div>
+    </header>
+
+    <div id="discs-container"></div>
+
+    <div class="toggle-section">
+        <span>Barra 20kg</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="barToggle" onclick="atualizarInterface()">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+
+    <div class="total-section">
+        <div class="total-row" id="bar-row">
+            <span>Barra</span>
+            <span>20kg</span>
+        </div>
+        <div class="total-row">
+            <span>Discos</span>
+            <span id="discs-weight">0kg</span>
+        </div>
+        <div class="total-final">
+            <span>Total</span>
+            <span id="total-weight">20kg</span>
+        </div>
+    </div>
+
+    <script>
+        let discos = [
+            { peso: 50, quantidade: 0 },
+            { peso: 25, quantidade: 0 },
+            { peso: 20, quantidade: 0 },
+            { peso: 15, quantidade: 0 },
+            { peso: 10, quantidade: 0 },
+            { peso: 5, quantidade: 0 },
+            { peso: 2.5, quantidade: 0 },
+            { peso: 1.5, quantidade: 0 },
+            { peso: 1, quantidade: 0 }
+        ];
+
+        function aumentar(index) {
+            discos[index].quantidade++;
+            atualizarInterface();
+        }
+
+        function diminuir(index) {
+            if (discos[index].quantidade > 0) {
+                discos[index].quantidade--;
+                atualizarInterface();
+            }
+        }
+
+        function calcularTotal() {
+            const pesoBarra = document.getElementById('barToggle').checked ? 20 : 0;
+            const pesoDiscos = discos.reduce((total, disco) => 
+                total + (disco.peso * disco.quantidade), 0);
+            return { pesoBarra, pesoDiscos, total: pesoBarra + pesoDiscos };
+        }
+
+        function atualizarInterface() {
+            const container = document.getElementById('discs-container');
+            container.innerHTML = discos.map((disco, index) => `
+                <div class="disc-row">
+                    <span class="disc-weight">${disco.peso}kg</span>
+                    <div class="disc-controls">
+                        <button class="control-btn" onclick="diminuir(${index})">-</button>
+                        <span class="disc-count">${disco.quantidade}</span>
+                        <button class="control-btn" onclick="aumentar(${index})">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const { pesoBarra, pesoDiscos, total } = calcularTotal();
+            const barRow = document.getElementById('bar-row');
+            barRow.style.display = pesoBarra ? 'flex' : 'none';
+            document.getElementById('discs-weight').textContent = pesoDiscos + 'kg';
+            document.getElementById('total-weight').textContent = total + 'kg';
+        }
+
+        // Inicializar
+        atualizarInterface();
+    </script>
+</body>
+</html>
