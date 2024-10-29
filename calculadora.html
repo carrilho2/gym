@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
+    <title>Discos</title>
     <style>
         * {
             margin: 0;
@@ -13,51 +13,148 @@
         }
 
         body {
-            background-color: #000000;
+            background: linear-gradient(135deg, #121212, #1a1a1a);
             color: #ffffff;
             min-height: 100vh;
             padding: 16px;
         }
 
         .header {
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             display: grid;
             grid-template-columns: auto 1fr auto;
             align-items: center;
+            padding: 8px;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .back-btn {
             color: #fff;
             text-decoration: none;
             font-size: 24px;
-            opacity: 0.7;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #222, #2a2a2a);
         }
 
-        .back-btn:active {
+        .back-btn:hover {
             opacity: 1;
+            transform: translateX(-2px);
         }
 
         .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(45deg, #ffffff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .disc-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .disc-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .disc-weight {
             font-size: 20px;
             font-weight: 600;
+            background: linear-gradient(45deg, #ffffff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(145deg, #222, #2a2a2a);
+            padding: 6px;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(145deg, #2a2a2a, #333);
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn.minus {
+            color: #ff6b6b;
+        }
+
+        .control-btn.plus {
+            color: #4ecdc4;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(145deg, #333, #3a3a3a);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+            background: linear-gradient(145deg, #222, #2a2a2a);
+        }
+
+        .disc-count {
+            min-width: 32px;
             text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
         }
 
         .toggle-section {
-            margin-top: 24px;
+            margin: 24px 0;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 8px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 46px;
-            height: 24px;
+            width: 52px;
+            height: 28px;
         }
 
         .toggle-switch input {
@@ -73,9 +170,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: .4s;
-            border-radius: 24px;
+            background: linear-gradient(145deg, #222, #2a2a2a);
+            transition: 0.4s;
+            border-radius: 34px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .toggle-slider:before {
@@ -83,88 +181,62 @@
             content: "";
             height: 20px;
             width: 20px;
-            left: 2px;
-            bottom: 2px;
+            left: 4px;
+            bottom: 4px;
             background-color: white;
-            transition: .4s;
+            transition: 0.4s;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         input:checked + .toggle-slider {
-            background-color: #444;
+            background: linear-gradient(45deg, #ffffff, #1b1b1b);
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(22px);
+            transform: translateX(24px);
         }
 
-        .disc-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            margin-bottom: 10px;
+        /* Opcional: efeito hover */
+        .toggle-slider:hover {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .disc-weight {
-            font-size: 18px;
-            font-weight: 600;
-            min-width: 60px;
-        }
-
-        .disc-controls {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .disc-count {
-            font-size: 18px;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .control-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .control-btn:active {
-            background: rgba(255, 255, 255, 0.2);
+        .toggle-slider:hover:before {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .total-section {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 32px;
+            padding: 24px;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .total-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 8px 0;
         }
 
         .total-final {
             display: flex;
             justify-content: space-between;
-            font-size: 20px;
-            font-weight: 600;
-            margin-top: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(45deg, #ffffff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
+        /* Elemento vazio para balancear o grid */
         .header-spacer {
             width: 24px;
         }
@@ -182,7 +254,7 @@
     <div class="toggle-section">
         <span>Barra 20kg</span>
         <label class="toggle-switch">
-            <input type="checkbox" id="barToggle" onclick="atualizarInterface()">
+            <input type="checkbox" id="modeToggle">
             <span class="toggle-slider"></span>
         </label>
     </div>
@@ -216,6 +288,9 @@
             { peso: 1, quantidade: 0 }
         ];
 
+        let isBarMode = false;
+        let barWeight = 20; // Peso da barra
+
         function aumentar(index) {
             discos[index].quantidade++;
             atualizarInterface();
@@ -229,7 +304,7 @@
         }
 
         function calcularTotal() {
-            const pesoBarra = document.getElementById('barToggle').checked ? 20 : 0;
+            const pesoBarra = document.getElementById('modeToggle').checked ? 20 : 0;
             const pesoDiscos = discos.reduce((total, disco) => 
                 total + (disco.peso * disco.quantidade), 0);
             return { pesoBarra, pesoDiscos, total: pesoBarra + pesoDiscos };
@@ -239,11 +314,11 @@
             const container = document.getElementById('discs-container');
             container.innerHTML = discos.map((disco, index) => `
                 <div class="disc-row">
-                    <span class="disc-weight">${disco.peso}kg</span>
-                    <div class="disc-controls">
-                        <button class="control-btn" onclick="diminuir(${index})">-</button>
+                    <span class="disc-weight" data-weight="${disco.peso}">${disco.peso}kg</span>
+                    <div class="controls-wrapper">
+                        <button class="control-btn minus" onclick="diminuir(${index})">-</button>
                         <span class="disc-count">${disco.quantidade}</span>
-                        <button class="control-btn" onclick="aumentar(${index})">+</button>
+                        <button class="control-btn plus" onclick="aumentar(${index})">+</button>
                     </div>
                 </div>
             `).join('');
@@ -255,6 +330,59 @@
             document.getElementById('total-weight').textContent = total + 'kg';
         }
 
+        function setupToggle() {
+            const toggle = document.getElementById('modeToggle');
+            
+            toggle.addEventListener('change', function() {
+                isBarMode = this.checked;
+                
+                // Atualiza imediatamente o total baseado no estado do toggle
+                if (isBarMode) {
+                    // Adiciona o peso da barra quando ativado
+                    addBarWeight();
+                } else {
+                    // Remove o peso da barra quando desativado
+                    removeBarWeight();
+                }
+                
+                updateTotals();
+            });
+        }
+
+        function addBarWeight() {
+            const totalElement = document.getElementById('totalWeight');
+            const currentTotal = parseInt(totalElement.textContent);
+            totalElement.textContent = `${currentTotal + barWeight}kg`;
+        }
+
+        function removeBarWeight() {
+            const totalElement = document.getElementById('totalWeight');
+            const currentTotal = parseInt(totalElement.textContent);
+            totalElement.textContent = `${currentTotal - barWeight}kg`;
+        }
+
+        function updateTotals() {
+            let totalWeight = 0;
+            const counts = discos.map(disco => disco.quantidade);
+            const subtotal = counts.reduce((a, b) => a + b, 0);
+            
+            if (isBarMode) {
+                totalWeight = subtotal + barWeight;
+            } else {
+                totalWeight = subtotal;
+            }
+            
+            document.getElementById('subtotalWeight').textContent = `${subtotal}kg`;
+            document.getElementById('totalWeight').textContent = `${totalWeight}kg`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupToggle();
+            updateTotals(); // Inicializa os totais
+            // ... resto do seu código de inicialização
+        });
+
+        // Inicializar
         atualizarInterface();
     </script>
 </body>
